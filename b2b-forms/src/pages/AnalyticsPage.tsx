@@ -9,6 +9,7 @@ import { getSurvey } from '../surveys';
 import { fetchAggregates, exportCsvUrl } from '../core/analytics';
 import type { AggregateResult } from '../core/analytics';
 import { fieldSpec } from '../core/schema';
+import { PUBLIC_BASE_URL } from '../config';
 import type { SurveyConfig } from '../core/types';
 
 export function AnalyticsPage() {
@@ -73,7 +74,7 @@ function Dashboard({ config }: { config: SurveyConfig }) {
     );
   }
 
-  const shareUrl = `${window.location.origin}/s/${config.slug}`;
+  const shareUrl = `${PUBLIC_BASE_URL}/s/${config.slug}`;
 
   return (
     <Shell>
