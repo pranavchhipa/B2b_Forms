@@ -36,6 +36,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'business_type',
           label: 'What best describes your business?',
           type: 'single-choice',
+          required: true,
           allowOther: true,
           options: [
             { value: 'travel_agent', label: 'Travel agent' },
@@ -48,6 +49,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'monthly_bookings',
           label: 'Approx. cab bookings per month',
           type: 'number',
+          required: true,
           min: 0,
           placeholder: 'e.g. 120',
           help: 'A rough number is fine.',
@@ -56,6 +58,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'trip_types',
           label: 'Most common trip types',
           type: 'multi-choice',
+          required: true,
           options: [
             { value: 'one_way', label: 'One Way' },
             { value: 'round_trip', label: 'Round Trip' },
@@ -80,6 +83,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'online_channels',
           label: 'Where do you list or promote online?',
           type: 'multi-choice',
+          required: true,
           options: [
             { value: 'gmb', label: 'Google My Business' },
             { value: 'justdial', label: 'JustDial' },
@@ -94,6 +98,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'customer_source',
           label: 'How do customers usually find you?',
           type: 'multi-choice',
+          required: true,
           options: [
             { value: 'walk_ins', label: 'Walk-ins' },
             { value: 'referrals', label: 'Referrals' },
@@ -113,6 +118,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'sourcing_platforms',
           label: 'How do you source / fulfil cabs?',
           type: 'multi-choice',
+          required: true,
           options: [
             { value: 'direct_driver_network', label: 'Direct driver network' },
             { value: 'other_b2b', label: 'Other B2B platforms' },
@@ -136,6 +142,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'problems',
           label: 'Biggest problems you face today',
           type: 'multi-choice',
+          required: true,
           options: [
             { value: 'vehicle_availability', label: 'Vehicle availability' },
             { value: 'pricing', label: 'Pricing' },
@@ -149,6 +156,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'help_most',
           label: 'Where could B2BCab help you most?',
           type: 'multi-choice',
+          required: true,
           options: [
             { value: 'wider_availability', label: 'Wider availability' },
             { value: 'better_rates', label: 'Better rates' },
@@ -161,6 +169,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'payment_terms',
           label: 'Best payment terms for you',
           type: 'single-choice',
+          required: true,
           options: [
             { value: 'pay_per_booking', label: 'Pay per booking' },
             { value: 'prepaid_wallet', label: 'Prepaid wallet' },
@@ -179,6 +188,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'current_earning',
           label: 'Current monthly earning from cab bookings (₹)',
           type: 'number',
+          required: true,
           min: 0,
           placeholder: 'e.g. 150000',
         },
@@ -186,6 +196,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'target_income',
           label: 'Target monthly income via B2BCab (₹)',
           type: 'number',
+          required: true,
           min: 0,
           placeholder: 'e.g. 300000',
         },
@@ -193,6 +204,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           id: 'fair_commission',
           label: 'Fair commission / margin per booking',
           type: 'short-text',
+          required: true,
           placeholder: 'e.g. 8% or ₹150',
         },
       ],
