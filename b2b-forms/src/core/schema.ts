@@ -36,6 +36,7 @@ export function fieldSpec(config: SurveyConfig): string {
         default:
           kind = 't';
       }
+      if (q.excludeFromAnalytics) kind = 'x';
       parts.push(`${q.id}:${kind}`);
       if (q.allowOther) parts.push(`${q.id}_other:t`);
     }

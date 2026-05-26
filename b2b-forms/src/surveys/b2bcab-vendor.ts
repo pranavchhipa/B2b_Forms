@@ -5,7 +5,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
   formId: 'b2bcab_vendor',
   title: 'B2BCab Vendor Survey',
   intro:
-    'Help us build B2BCab.in into the platform you actually want. Takes about 3–4 minutes — your answers go straight to our team.',
+    'Help us build B2BCab.in into the platform you actually want. Takes about 3 minutes — your answers go straight to our team.',
   layout: 'wizard',
   thanksMessage:
     'Thank you! Your responses help us make B2BCab.in better for vendors like you.',
@@ -15,9 +15,9 @@ export const b2bcabVendorSurvey: SurveyConfig = {
       title: 'Contact',
       description: 'So we can follow up with you.',
       questions: [
-        { id: 'name', label: 'Your name', type: 'short-text', required: true, placeholder: 'Full name' },
-        { id: 'business', label: 'Business name', type: 'short-text', required: true, placeholder: 'e.g. Sharma Travels' },
-        { id: 'city', label: 'City', type: 'short-text', required: true, placeholder: 'e.g. Jaipur' },
+        { id: 'name', label: 'Your name', type: 'short-text', required: true, placeholder: 'Full name', excludeFromAnalytics: true },
+        { id: 'business', label: 'Business name', type: 'short-text', required: true, placeholder: 'e.g. Sharma Travels', excludeFromAnalytics: true },
+        { id: 'city', label: 'City', type: 'short-text', required: true, placeholder: 'e.g. Jaipur', excludeFromAnalytics: true },
         {
           id: 'phone',
           label: 'Phone number',
@@ -173,7 +173,6 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           options: [
             { value: 'pay_per_booking', label: 'Pay per booking' },
             { value: 'prepaid_wallet', label: 'Prepaid wallet' },
-            { value: 'credit', label: 'Credit' },
             { value: 'weekly_settlement', label: 'Weekly settlement' },
           ],
         },
@@ -181,8 +180,7 @@ export const b2bcabVendorSurvey: SurveyConfig = {
     },
     {
       id: 'commercials',
-      title: 'Commercials',
-      description: 'Rough numbers are fine — this helps us price fairly.',
+      title: 'Commercials & feedback',
       questions: [
         {
           id: 'current_earning',
@@ -191,28 +189,8 @@ export const b2bcabVendorSurvey: SurveyConfig = {
           required: true,
           min: 0,
           placeholder: 'e.g. 150000',
+          help: 'A rough number is fine.',
         },
-        {
-          id: 'target_income',
-          label: 'Target monthly income via B2BCab (₹)',
-          type: 'number',
-          required: true,
-          min: 0,
-          placeholder: 'e.g. 300000',
-        },
-        {
-          id: 'fair_commission',
-          label: 'Fair commission / margin per booking',
-          type: 'short-text',
-          required: true,
-          placeholder: 'e.g. 8% or ₹150',
-        },
-      ],
-    },
-    {
-      id: 'feedback',
-      title: 'Feedback',
-      questions: [
         {
           id: 'site_feedback',
           label: 'Honest feedback on the current B2BCab.in site',

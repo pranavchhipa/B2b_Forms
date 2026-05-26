@@ -23,6 +23,8 @@ export interface Question {
   help?: string;
   min?: number;
   max?: number;
+  /** Keep this answer out of the analytics dashboard (still saved to the Sheet + CSV). */
+  excludeFromAnalytics?: boolean;
 }
 
 export interface Section {
