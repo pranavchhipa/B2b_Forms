@@ -1,19 +1,19 @@
 # B2B Survey Tool — Design Spec
 
 - **Date:** 2026-05-26
-- **Status:** Approved design, pending spec review
+- **Status:** Approved — implementing. Stack: React + Vite (see §3).
 - **First form:** B2BCab.in vendor survey
 
 ## 1. Goal & scope
 
-A reusable, **config-driven** survey/form tool. Define a form once as a config object (sections → questions → options → type); a generic Angular renderer renders it as a multi-step wizard. Responses are stored in a Google Sheet via Google Apps Script. A built-in, passcode-protected analytics dashboard shows per-question results. Sharing is via a public link + QR code.
+A reusable, **config-driven** survey/form tool. Define a form once as a config object (sections → questions → options → type); a generic React renderer renders it as a multi-step wizard. Responses are stored in a Google Sheet via Google Apps Script. A built-in, passcode-protected analytics dashboard shows per-question results. Sharing is via a public link + QR code.
 
 A **new form means a new config file** — no UI rebuild.
 
 ## 2. Locked decisions (from kickoff)
 
 - Config-driven: surveys defined as TS config; one generic renderer.
-- Standalone new Angular app, separate from the cab portal. Free static deploy on Vercel; own URL (e.g. `survey.b2bcab.in` or `*.vercel.app`).
+- Standalone new single-page app (React + Vite — see §3), separate from the cab portal. Free static deploy on Vercel; own URL (e.g. `survey.b2bcab.in` or `*.vercel.app`).
 - Backend: Google Apps Script + Google Sheet, reusing the cab portal's proven `fetch` + `mode:'no-cors'` + `text/plain` write pattern. One Sheet tab per form.
 - Share: public link + QR generated from the URL.
 - Analytics: basic dashboard (per-question counts + charts).
@@ -23,6 +23,7 @@ A **new form means a new config file** — no UI rebuild.
 
 | Decision | Resolution |
 |---|---|
+| Framework | **React + Vite + TypeScript** (reconsidered from the original Angular pick — lighter bundle, mobile-first, faster to build). Backend/contract unchanged. |
 | Analytics location | **In-app coded dashboard** (not Looker Studio / Sheet charts) — keeps everything in one owned, config-driven app. |
 | Analytics privacy (PII) | **Private.** Per-form passcode validated **server-side** in Apps Script. Passcode never in the client bundle. Client only ever receives aggregates, not raw phone/earnings. |
 | Form UX | **Multi-step wizard** (section-by-section, progress bar, localStorage resume). |
@@ -32,10 +33,13 @@ A **new form means a new config file** — no UI rebuild.
 ## 4. Architecture
 
 ### Stack
-- **Angular** (standalone components), **Reactive Forms** for the runtime-built dynamic form.
-- **Chart.js** via `ng2-charts` for dashboard charts.
-- **`angularx-qrcode`** for client-side QR (no third-party call).
-- **Vercel** static deploy + `vercel.json` SPA rewrite (all routes → `index.html`).
+- **React + Vite + TypeScript** SPA.
+- **React Router** for routing.
+- **Tailwind CSS v4** (`@tailwindcss/vite`) for mobile-first styling.
+- Lightweight custom CSS charts for the dashboard (horizontal bars / stat tiles / response lists) — no chart library needed for v1.
+- **`qrcode.react`** for client-side QR (no third-party call).
+- Dynamic form state via a custom `useSurveyForm` hook + pure validation functions (no form library — fields are fully config-driven).
+- **Vercel** static deploy + `vercel.json` SPA rewrite (all routes → `index.html`); project root = `b2b-forms/`.
 - **Backend:** one Apps Script web app bound to one Google Sheet; one tab per form. Routing by a `formId` field. Centralized so the backend is deployed/maintained once.
 
 ### Routes
@@ -47,24 +51,34 @@ A **new form means a new config file** — no UI rebuild.
 | `/a/:slug` | Analytics dashboard (passcode-gated) |
 
 ### Data flow
-- **Submit (write):** Angular form → `fetch` with `mode:'no-cors'`, `Content-Type: text/plain`, body = JSON `{formId, answers}` → Apps Script `doPost` appends a row to the `formId` tab with a server timestamp. Fire-and-forget; on resolve, navigate to `/s/:slug/thanks` and clear the localStorage draft.
-- **Analytics (read):** dashboard → CORS-readable GET (JSONP fallback if needed) with `{formId, passcode}` → Apps Script `doGet` validates the passcode against a server-side value, reads the tab, returns **per-question aggregates** as JSON → Chart.js renders. Raw PII never leaves the Sheet except via the explicit, passcode-gated CSV export.
+- **Submit (write):** React form → `fetch` with `mode:'no-cors'`, `Content-Type: text/plain`, body = JSON `{formId, answers}` → Apps Script `doPost` appends a row to the `formId` tab with a server timestamp. Fire-and-forget; on resolve, navigate to `/s/:slug/thanks` and clear the localStorage draft.
+- **Analytics (read):** dashboard → CORS-readable GET (JSONP fallback if needed) with `{formId, passcode}` → Apps Script `doGet` validates the passcode against a server-side value, reads the tab, returns **per-question aggregates** as JSON → rendered as lightweight CSS charts. Raw PII never leaves the Sheet except via the explicit, passcode-gated CSV export.
 
 ### Folder structure
 ```
-src/app/
+b2b-forms/src/
   core/
-    models/         # SurveyConfig, Question, Section, QuestionType
-    services/       # SubmitService (write), AnalyticsService (read), ConfigRegistry
-    validation/     # config-driven validators
+    types.ts          # SurveyConfig, Question, Section, QuestionType
+    validation.ts     # config-driven pure validators (tested)
+    submit.ts         # no-cors write
+    analytics.ts      # read aggregates / export
+    useSurveyForm.ts  # answers + step + validation + localStorage draft
   surveys/
-    b2bcab-vendor.config.ts
-    index.ts        # registry: slug -> SurveyConfig
+    b2bcab-vendor.ts
+    index.ts          # registry: slug -> SurveyConfig
+  components/
+    Question.tsx      # switch on type
+    Section.tsx       # one wizard step
+    Progress.tsx
+    charts/           # ChoiceChart, NumberStats, TextResponses
   pages/
-    survey/         # wizard host + SectionComponent + QuestionComponent
-    thanks/
-    analytics/      # passcode gate + chart components
-  config.ts         # Apps Script web-app URL (public endpoint, not secret)
+    HomePage.tsx
+    SurveyPage.tsx    # wizard host
+    ThanksPage.tsx
+    AnalyticsPage.tsx # passcode gate + dashboard
+  config.ts           # Apps Script web-app URL (public endpoint, not secret)
+  App.tsx             # router
+  main.tsx
 ```
 
 ## 5. Config schema
@@ -111,14 +125,14 @@ interface SurveyConfig {
 
 ## 6. Generic renderer & wizard
 
-- `QuestionComponent` switches on `type` to render the correct control (text input, textarea, number input, phone input, radio group, checkbox group; choice components honor `allowOther`).
-- `SectionComponent` renders one wizard step (title, description, its questions).
-- The survey page builds one reactive form from the config, drives step navigation (Back/Next + progress bar), and shows an intro on the first step and a review/submit on the last.
-- **Draft persistence:** form value mirrored to `localStorage` keyed by `slug`; restored on load; cleared on successful submit.
+- `Question` component switches on `type` to render the correct control (text input, textarea, number input, phone input, radio group, checkbox group; choice controls honor `allowOther`).
+- `Section` component renders one wizard step (title, description, its questions).
+- `SurveyPage` uses the `useSurveyForm` hook (answers object keyed by question `id`), drives step navigation (Back/Next + progress bar), shows an intro on the first step and a review/submit on the last.
+- **Draft persistence:** answers mirrored to `localStorage` keyed by `slug`; restored on load; cleared on successful submit.
 
 ## 7. Validation
 
-- Driven by config: `required`, `phone` (Indian 10-digit / +91 format), `number` (`min`/`max`).
+- Pure functions driven by config: `required`, `phone` (Indian 10-digit / +91 format), `number` (`min`/`max`). Unit-tested.
 - Per-step gating: cannot advance past a step containing an invalid required field; errors shown inline.
 - Final submit re-validates the whole form.
 
@@ -167,7 +181,7 @@ interface SurveyConfig {
 
 ## 11. Multi-form management
 
-- `surveys/<name>.config.ts` exports a `SurveyConfig`.
+- `surveys/<name>.ts` exports a `SurveyConfig`.
 - `surveys/index.ts` is the registry: `{ [slug]: config }`.
 - `/s/:slug` and `/a/:slug` look up the config by slug; unknown slug → not-found.
 - New form checklist: add config file → register slug → add Sheet tab → set passcode in Script Properties.
@@ -215,9 +229,9 @@ Required: all Section 1 (Contact) fields. All others optional (maximize completi
 
 ## 13. Deployment
 
-- **Angular:** `ng build` → static output; `vercel.json` rewrites all routes to `index.html` for SPA deep links.
-- **Vercel:** connect repo, framework preset Angular, deploy. Custom domain `survey.b2bcab.in` optional.
-- **Apps Script:** deploy as web app, execute as owner, access "Anyone". Web-app URL → `src/app/config.ts` (public, not secret). Passcodes → Script Properties per `formId`.
+- **Build:** `npm run build` (Vite) → static `dist/`; `vercel.json` rewrites all routes to `index.html` for SPA deep links.
+- **Vercel:** connect repo, framework preset Vite, **Root Directory = `b2b-forms`**, deploy. Custom domain `survey.b2bcab.in` optional.
+- **Apps Script:** deploy as web app, execute as owner, access "Anyone". Web-app URL → `b2b-forms/src/config.ts` (public, not secret). Passcodes → Script Properties per `formId`.
 
 ## 14. Non-goals / YAGNI (v1)
 

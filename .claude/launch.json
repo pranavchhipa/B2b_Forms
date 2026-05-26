@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "b2b-forms",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "b2b-forms", "run", "dev"],
+      "port": 5173
+    }
+  ]
+}
