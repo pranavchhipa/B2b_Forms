@@ -14,7 +14,7 @@ export function ThanksPage() {
   return (
     <Shell>
       <div className="mx-auto mt-8 max-w-md text-center">
-        <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-brand-400 text-ink shadow-[0_2px_0_0_var(--color-brand-700)]">
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-brand-600 text-white shadow-sm">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
             <path
               d="M5 12.5l4.5 4.5L19 7"

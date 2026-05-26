@@ -63,7 +63,7 @@ function Dashboard({ config }: { config: SurveyConfig }) {
             <button
               type="submit"
               disabled={loading || !passcode}
-              className="w-full rounded-xl bg-ink px-5 py-3 text-[15px] font-semibold text-paper transition hover:bg-ink-soft disabled:opacity-60"
+              className="w-full rounded-xl bg-brand-600 px-5 py-3 text-[15px] font-semibold text-white transition hover:bg-brand-700 disabled:opacity-60"
             >
               {loading ? 'Checking…' : 'View results'}
             </button>

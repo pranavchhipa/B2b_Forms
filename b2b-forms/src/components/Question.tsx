@@ -32,14 +32,14 @@ function Chip({
       className={[
         'flex items-center gap-2.5 rounded-xl border px-4 py-3 text-left text-[15px] font-medium transition active:scale-[0.98]',
         selected
-          ? 'border-brand-500 bg-brand-400/90 text-ink shadow-[0_2px_0_0_var(--color-brand-700)]'
-          : 'border-line bg-paper-2 text-ink-soft hover:border-ink/25',
+          ? 'border-brand-500 bg-brand-50 text-brand-700'
+          : 'border-line bg-paper-2 text-ink-soft hover:border-brand-300 hover:bg-brand-50/50',
       ].join(' ')}
     >
       <span
         className={[
           'grid h-5 w-5 shrink-0 place-items-center rounded-md border transition',
-          selected ? 'border-ink/20 bg-ink text-brand-400' : 'border-line bg-paper',
+          selected ? 'border-brand-600 bg-brand-600 text-white' : 'border-line bg-paper-2',
         ].join(' ')}
       >
         {selected && (

@@ -96,7 +96,7 @@ function SurveyRunner({ config }: { config: SurveyConfig }) {
           <button
             type="button"
             onClick={form.next}
-            className="rounded-xl bg-ink px-6 py-3 text-[15px] font-semibold text-paper transition hover:bg-ink-soft active:scale-[0.98]"
+            className="rounded-xl bg-brand-600 px-6 py-3 text-[15px] font-semibold text-white shadow-sm transition hover:bg-brand-700 active:scale-[0.98]"
           >
             Continue
           </button>
@@ -105,7 +105,7 @@ function SurveyRunner({ config }: { config: SurveyConfig }) {
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="rounded-xl bg-brand-500 px-6 py-3 text-[15px] font-semibold text-ink shadow-[0_2px_0_0_var(--color-brand-700)] transition hover:bg-brand-400 active:scale-[0.98] disabled:opacity-60"
+            className="rounded-xl bg-brand-600 px-6 py-3 text-[15px] font-semibold text-white shadow-sm transition hover:bg-brand-700 active:scale-[0.98] disabled:opacity-60"
           >
             {submitting ? 'Submitting…' : 'Submit'}
           </button>
