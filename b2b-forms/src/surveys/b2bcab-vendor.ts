@@ -3,12 +3,12 @@ import type { SurveyConfig } from '../core/types';
 export const b2bcabVendorSurvey: SurveyConfig = {
   slug: 'b2bcab-vendor',
   formId: 'b2bcab_vendor',
-  title: 'B2BCab Vendor Survey',
+  title: 'B2BCab Agent Survey',
   intro:
     'Help us build B2BCab.in into the platform you actually want. Takes about 3 minutes — your answers go straight to our team.',
   layout: 'wizard',
   thanksMessage:
-    'Thank you! Your responses help us make B2BCab.in better for vendors like you.',
+    'Thank you! Your responses help us make B2BCab.in better for agents like you.',
   sections: [
     {
       id: 'contact',

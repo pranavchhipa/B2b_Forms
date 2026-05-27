@@ -9,7 +9,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <Link to="/" className="flex items-center" aria-label="B2BCAB home">
             <img src="/logo.webp" alt="B2BCAB" className="h-7 w-auto" />
           </Link>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-paper/55">Vendor Survey</span>
+          <span className="text-[11px] uppercase tracking-[0.2em] text-paper/55">Agent Survey</span>
         </div>
       </header>
 

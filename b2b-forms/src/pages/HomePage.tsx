@@ -11,7 +11,7 @@ const BENEFITS = [
 
 export function HomePage() {
   useEffect(() => {
-    document.title = 'B2BCAB — Vendor Survey';
+    document.title = 'B2BCAB — Agent Survey';
   }, []);
 
   const surveys = allSurveys();
@@ -37,7 +37,7 @@ export function HomePage() {
           </svg>
 
           <span className="inline-flex items-center rounded-full bg-brand-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-700">
-            Vendor Survey
+            Agent Survey
           </span>
 
           <h1 className="mt-4 text-3xl font-bold leading-[1.1] text-ink sm:text-[2.7rem]">
